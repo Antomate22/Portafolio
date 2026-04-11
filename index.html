@@ -1,11 +1,1391 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Portafolio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antonella Blasco — Desarrolladora Full Stack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ───────────────────────────────────────────
+       TOKENS & RESET
+    ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0a0a;
+      --bg-2:      #111111;
+      --bg-3:      #181818;
+      --border:    rgba(255,255,255,0.08);
+      --border-md: rgba(255,255,255,0.14);
+      --accent:    #00e5a0;
+      --accent-2:  #00c285;
+      --text:      #f0f0f0;
+      --muted:     #888888;
+      --muted-2:   #555555;
+      --card-bg:   #141414;
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius:    12px;
+      --radius-lg: 20px;
+      --max:       1120px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ───────────────────────────────────────────
+       ANIMATIONS
+    ─────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0,229,160,0.4); }
+      70%  { transform: scale(1);    box-shadow: 0 0 0 14px rgba(0,229,160,0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0,229,160,0); }
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .anim { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+    .anim-d1 { animation-delay: 0.1s; }
+    .anim-d2 { animation-delay: 0.22s; }
+    .anim-d3 { animation-delay: 0.36s; }
+    .anim-d4 { animation-delay: 0.5s; }
+    .anim-d5 { animation-delay: 0.64s; }
+
+    /* ───────────────────────────────────────────
+       NAVIGATION
+    ─────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      height: 64px;
+      display: flex; align-items: center;
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 24px;
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 18px; font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex; gap: 32px; align-items: center;
+    }
+    .nav-links a {
+      font-size: 14px; color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent);
+      color: #000 !important;
+      font-weight: 600; font-size: 13px;
+      padding: 9px 20px;
+      border-radius: 8px;
+      transition: background 0.2s, transform 0.15s !important;
+    }
+    .nav-cta:hover { background: var(--accent-2) !important; transform: translateY(-1px); }
+    .nav-burger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-burger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--text); margin: 5px 0;
+      transition: 0.3s;
+    }
+
+    /* ───────────────────────────────────────────
+       HERO
+    ─────────────────────────────────────────── */
+    #hero {
+      padding-top: 144px;
+      padding-bottom: 96px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Geometric background decoration */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -120px;
+      width: 640px; height: 640px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,229,160,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      bottom: 40px; left: -80px;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,229,160,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,229,160,0.08);
+      border: 1px solid rgba(0,229,160,0.2);
+      color: var(--accent);
+      font-size: 13px; font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 28px;
+    }
+    .hero-badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+    .hero-title {
+      font-family: var(--font-head);
+      font-size: clamp(38px, 5vw, 64px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .hero-title .line-accent { color: var(--accent); }
+    .hero-sub {
+      font-size: 18px; font-weight: 300;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+    .hero-sub strong { color: var(--text); font-weight: 500; }
+    .hero-ctas {
+      display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent);
+      color: #000;
+      font-family: var(--font-body);
+      font-weight: 600; font-size: 15px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+    .btn-primary:hover { background: var(--accent-2); transform: translateY(-2px); }
+    .btn-primary svg { transition: transform 0.2s; }
+    .btn-primary:hover svg { transform: translateX(3px); }
+
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 500; font-size: 15px;
+      padding: 13px 24px;
+      border-radius: 10px;
+      border: 1px solid var(--border-md);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
+
+    .hero-stats {
+      display: flex; gap: 32px; margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: var(--font-head);
+      font-size: 30px; font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 13px; color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Hero right card */
+    .hero-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      position: relative;
+    }
+    .hero-card-top {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 24px;
+    }
+    .hero-avatar {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00e5a0, #00bcd4);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head);
+      font-size: 20px; font-weight: 700;
+      color: #000;
+      flex-shrink: 0;
+    }
+    .hero-card-name {
+      font-family: var(--font-head);
+      font-size: 18px; font-weight: 700;
+    }
+    .hero-card-role { font-size: 13px; color: var(--muted); }
+    .hero-card-stars {
+      display: flex; gap: 3px; color: #f5a623; font-size: 15px;
+      margin-bottom: 16px;
+    }
+    .hero-card-stars span { font-size: 13px; color: var(--muted); margin-left: 6px; }
+    .hero-card-tags {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 20px;
+    }
+    .tag {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12px; font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+    .tag.hi { background: rgba(0,229,160,0.08); border-color: rgba(0,229,160,0.2); color: var(--accent); }
+    .hero-card-meta {
+      display: flex; gap: 16px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .meta-item { font-size: 12px; color: var(--muted); }
+    .meta-item strong { color: var(--text); font-weight: 500; display: block; font-size: 13px; }
+
+    /* ───────────────────────────────────────────
+       TICKER / MARQUEE
+    ─────────────────────────────────────────── */
+    .ticker-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+      background: var(--bg-2);
+    }
+    .ticker-track {
+      display: flex; gap: 48px;
+      width: max-content;
+      animation: ticker 28s linear infinite;
+    }
+    .ticker-item {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 13px; font-weight: 500; color: var(--muted);
+      white-space: nowrap;
+    }
+    .ticker-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+    /* ───────────────────────────────────────────
+       SECTION COMMONS
+    ─────────────────────────────────────────── */
+    section { padding: 96px 0; }
+
+    .section-eyebrow {
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 17px; color: var(--muted); font-weight: 300;
+      max-width: 580px; line-height: 1.65;
+    }
+    .section-header { margin-bottom: 56px; }
+
+    /* ───────────────────────────────────────────
+       SERVICES
+    ─────────────────────────────────────────── */
+    #services { background: var(--bg-2); }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .service-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      display: flex; flex-direction: column;
+      transition: border-color 0.25s, transform 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .service-card:hover { border-color: var(--border-md); transform: translateY(-4px); }
+    .service-card:hover::before { opacity: 1; }
+
+    .service-icon {
+      width: 48px; height: 48px;
+      background: rgba(0,229,160,0.08);
+      border: 1px solid rgba(0,229,160,0.15);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .service-icon svg { color: var(--accent); }
+    .service-title {
+      font-family: var(--font-head);
+      font-size: 18px; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .service-tagline {
+      font-size: 14px; color: var(--accent);
+      font-weight: 500; margin-bottom: 14px;
+    }
+    .service-desc {
+      font-size: 14px; color: var(--muted);
+      line-height: 1.6; flex: 1;
+      margin-bottom: 20px;
+    }
+    .service-includes {
+      margin-bottom: 24px;
+    }
+    .service-includes li {
+      font-size: 13px; color: var(--muted);
+      padding: 4px 0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .service-includes li::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .service-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      background: transparent;
+      border: 1px solid var(--border-md);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 13px; font-weight: 500;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      width: 100%;
+    }
+    .service-btn:hover {
+      background: var(--accent); color: #000;
+      border-color: var(--accent);
+    }
+
+    /* ───────────────────────────────────────────
+       WHY ME
+    ─────────────────────────────────────────── */
+    #why {
+      background: var(--bg);
+    }
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .why-list {
+      display: flex; flex-direction: column; gap: 24px;
+    }
+    .why-item {
+      display: flex; gap: 18px; align-items: flex-start;
+    }
+    .why-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: rgba(0,229,160,0.07);
+      border: 1px solid rgba(0,229,160,0.15);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .why-icon svg { color: var(--accent); }
+    .why-item-title {
+      font-family: var(--font-head);
+      font-size: 16px; font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .why-item-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    .why-visual {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+    }
+    .tech-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    }
+    .tech-pill {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+      font-size: 13px; font-weight: 500;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    .tech-pill:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,160,0.05); }
+    .why-visual-title {
+      font-family: var(--font-head);
+      font-size: 15px; font-weight: 600;
+      margin-bottom: 16px; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em; font-size: 11px;
+    }
+
+    /* ───────────────────────────────────────────
+       CASE STUDY
+    ─────────────────────────────────────────── */
+    #case { background: var(--bg-2); }
+
+    .case-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .case-content {
+      padding: 48px;
+    }
+    .case-label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .case-label::before {
+      content: ''; display: block;
+      width: 20px; height: 2px;
+      background: var(--accent);
+    }
+    .case-title {
+      font-family: var(--font-head);
+      font-size: 28px; font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .case-desc { font-size: 15px; color: var(--muted); line-height: 1.65; margin-bottom: 28px; }
+    .case-features {
+      display: flex; flex-direction: column; gap: 12px;
+      margin-bottom: 32px;
+    }
+    .case-feature {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 14px;
+    }
+    .case-feature-icon {
+      width: 32px; height: 32px; flex-shrink: 0;
+      background: rgba(0,229,160,0.08);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .case-feature-icon svg { width: 15px; height: 15px; color: var(--accent); }
+
+    .case-visual {
+      background: linear-gradient(135deg, #0d1a14 0%, #081510 100%);
+      padding: 40px;
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .case-visual::before {
+      content: '';
+      position: absolute; top: -60px; right: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,229,160,0.12) 0%, transparent 70%);
+    }
+
+    /* Mini dashboard mockup */
+    .mini-dash {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px;
+      position: relative; z-index: 1;
+    }
+    .mini-dash-top {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 14px;
+    }
+    .mini-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .mini-dash-title {
+      font-size: 11px; color: var(--muted);
+      font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; margin-left: 4px;
+    }
+    .mini-stat-row {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 8px;
+      margin-bottom: 14px;
+    }
+    .mini-stat {
+      background: rgba(0,229,160,0.06);
+      border: 1px solid rgba(0,229,160,0.12);
+      border-radius: 8px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .mini-stat-n { font-size: 18px; font-weight: 700; color: var(--accent); font-family: var(--font-head); }
+    .mini-stat-l { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .mini-bar-row { display: flex; flex-direction: column; gap: 7px; }
+    .mini-bar-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin-bottom: 3px; }
+    .mini-bar-track { height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+    .mini-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
+
+    /* ───────────────────────────────────────────
+       TESTIMONIALS
+    ─────────────────────────────────────────── */
+    #testimonials { background: var(--bg); }
+
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .testi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      position: relative;
+    }
+    .testi-quote {
+      font-size: 36px;
+      color: var(--accent);
+      line-height: 1;
+      font-family: Georgia, serif;
+      margin-bottom: 16px;
+    }
+    .testi-text {
+      font-size: 15px;
+      color: #ccc;
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 24px;
+    }
+    .testi-author {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .testi-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head);
+      font-size: 14px; font-weight: 700;
+      color: #000;
+      flex-shrink: 0;
+    }
+    .testi-name { font-size: 14px; font-weight: 600; }
+    .testi-role { font-size: 12px; color: var(--muted); }
+    .testi-stars { color: #f5a623; font-size: 13px; margin-top: 4px; }
+
+    /* ───────────────────────────────────────────
+       PROCESS
+    ─────────────────────────────────────────── */
+    #process { background: var(--bg-2); }
+
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 36px;
+      left: calc(16.66% + 20px);
+      right: calc(16.66% + 20px);
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), rgba(0,229,160,0.2), var(--accent));
+      z-index: 0;
+    }
+    .process-step {
+      padding: 0 32px;
+      text-align: center;
+      position: relative; z-index: 1;
+    }
+    .step-num {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      border: 2px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head);
+      font-size: 22px; font-weight: 700;
+      color: var(--accent);
+      margin: 0 auto 24px;
+    }
+    .step-title {
+      font-family: var(--font-head);
+      font-size: 18px; font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .step-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ───────────────────────────────────────────
+       CTA FINAL
+    ─────────────────────────────────────────── */
+    #cta-final {
+      background: var(--bg);
+      text-align: center;
+    }
+    .cta-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 80px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(0,229,160,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-box .section-title { margin-bottom: 16px; }
+    .cta-box .section-sub { margin: 0 auto 40px; text-align: center; }
+    .cta-actions {
+      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+    .cta-email {
+      font-size: 14px; color: var(--muted);
+    }
+    .cta-email a { color: var(--accent); }
+    .cta-email a:hover { text-decoration: underline; }
+
+    /* ───────────────────────────────────────────
+       FOOTER
+    ─────────────────────────────────────────── */
+    footer {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+    }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo {
+      font-family: var(--font-head);
+      font-size: 16px; font-weight: 700;
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-links {
+      display: flex; gap: 24px;
+    }
+    .footer-links a {
+      font-size: 13px; color: var(--muted);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy {
+      font-size: 13px; color: var(--muted-2);
+    }
+
+    /* ───────────────────────────────────────────
+       MOBILE
+    ─────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+      .hero-card { max-width: 480px; }
+      .why-grid { grid-template-columns: 1fr; }
+      .case-card { grid-template-columns: 1fr; }
+      .case-visual { min-height: 300px; }
+      .process-steps { grid-template-columns: 1fr; gap: 36px; }
+      .process-steps::before { display: none; }
+      .process-step { padding: 0; text-align: left; display: flex; gap: 20px; align-items: flex-start; }
+      .step-num { flex-shrink: 0; width: 56px; height: 56px; font-size: 18px; margin: 0; }
+    }
+    @media (max-width: 640px) {
+      section { padding: 64px 0; }
+      .case-content { padding: 32px 24px; }
+      .cta-box { padding: 56px 24px; }
+      .hero-stats { flex-wrap: wrap; gap: 24px; }
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: fixed; top: 64px; left: 0; right: 0;
+        background: var(--bg-2);
+        border-bottom: 1px solid var(--border);
+        padding: 24px;
+        gap: 20px;
+        z-index: 99;
+      }
+      .nav-burger { display: block; }
+    }
+  </style>
 </head>
 <body>
-    Hola soy Rocio Antonella Blasco Programadora Full stack
+
+  <!-- ═══════════════════════════════════════
+       NAVIGATION
+  ═══════════════════════════════════════ -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo">Antonella<span>.</span></div>
+      <ul class="nav-links" id="nav-menu">
+        <li><a href="#services">Servicios</a></li>
+        <li><a href="#why">Sobre mí</a></li>
+        <li><a href="#case">Proyectos</a></li>
+        <li><a href="#process">Proceso</a></li>
+        <li><a href="mailto:blascoantonella02@gmail.com" class="nav-cta">Solicitar presupuesto</a></li>
+      </ul>
+      <button class="nav-burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+  <section id="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+
+        <!-- Left -->
+        <div>
+          <div class="hero-badge anim anim-d1">
+            <span class="hero-badge-dot"></span>
+            Disponible para nuevos proyectos
+          </div>
+
+          <h1 class="hero-title anim anim-d2">
+            Desarrollo sistemas<br>
+            que hacen crecer<br>
+            <span class="line-accent">tu negocio.</span>
+          </h1>
+
+          <p class="hero-sub anim anim-d3">
+            Soluciones web a medida pensadas para <strong>resultados reales de negocio</strong> — no solo código bonito.
+            De la idea al despliegue, me encargo de todo.
+          </p>
+
+          <div class="hero-ctas anim anim-d4">
+            <a href="mailto:blascoantonella02@gmail.com" class="btn-primary">
+              Solicitar presupuesto gratis
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+            </a>
+            <a href="#services" class="btn-outline">Ver mis servicios</a>
+          </div>
+
+          <div class="hero-stats anim anim-d5">
+            <div class="stat-item">
+              <div class="stat-num">30+</div>
+              <div class="stat-label">Proyectos entregados</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">100%</div>
+              <div class="stat-label">Clientes satisfechos</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-num">3y+</div>
+              <div class="stat-label">de experiencia</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right card -->
+        <div class="hero-card anim anim-d3">
+          <div class="hero-card-top">
+            <div class="hero-avatar">AB</div>
+            <div>
+              <div class="hero-card-name">Antonella Blasco</div>
+              <div class="hero-card-role">Desarrolladora Full Stack · Argentina</div>
+            </div>
+          </div>
+          <div class="hero-card-stars">
+            ★★★★★ <span>5.0 · Top Valorada</span>
+          </div>
+          <div class="hero-card-tags">
+            <span class="tag hi">PHP · Laravel</span>
+            <span class="tag hi">Node.js</span>
+            <span class="tag">MySQL</span>
+            <span class="tag">Docker</span>
+            <span class="tag">APIs</span>
+            <span class="tag">Tailwind</span>
+            <span class="tag">Bootstrap</span>
+          </div>
+          <div class="hero-card-meta">
+            <div class="meta-item">
+              <strong>24h</strong>
+              Respuesta promedio
+            </div>
+            <div class="meta-item">
+              <strong>On time</strong>
+              Entregas a tiempo
+            </div>
+            <div class="meta-item">
+              <strong>ARG</strong>
+              Zona horaria
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TICKER
+  ═══════════════════════════════════════ -->
+  <div class="ticker-wrap">
+    <div class="ticker-track">
+      <!-- duplicated for infinite scroll -->
+      <span class="ticker-item"><span class="ticker-dot"></span>PHP &amp; Laravel</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Node.js &amp; APIs</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>MySQL &amp; SQL Server</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Docker &amp; Deploy</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Tailwind CSS</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Automatización de Negocios</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Desarrollo Full Stack</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Sistemas Web a Medida</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>PHP &amp; Laravel</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Node.js &amp; APIs</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>MySQL &amp; SQL Server</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Docker &amp; Deploy</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Tailwind CSS</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Automatización de Negocios</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Desarrollo Full Stack</span>
+      <span class="ticker-item"><span class="ticker-dot"></span>Sistemas Web a Medida</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SERVICES
+  ═══════════════════════════════════════ -->
+  <section id="services">
+    <div class="wrap">
+      <div class="section-header">
+        <div class="section-eyebrow">Lo que ofrezco</div>
+        <h2 class="section-title">Servicios diseñados<br>para tus necesidades reales</h2>
+        <p class="section-sub">Sin plantillas. Sin atajos. Cada solución se diseña desde cero para adaptarse perfectamente a tu negocio.</p>
+      </div>
+
+      <div class="services-grid">
+
+        <!-- Gig 1 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+          </div>
+          <div class="service-title">Sistemas Web a Medida</div>
+          <div class="service-tagline">Construido exactamente para tu negocio</div>
+          <div class="service-desc">Desde herramientas internas hasta plataformas para clientes — analizo tu lógica de negocio y construyo el sistema que automatiza tus puntos de dolor.</div>
+          <ul class="service-includes">
+            <li>Análisis funcional completo</li>
+            <li>Diseño de base de datos a medida</li>
+            <li>Panel de administración e informes</li>
+            <li>Autenticación y roles de usuario</li>
+          </ul>
+          <a href="mailto:blascoantonella02@gmail.com?subject=Sistema Web a Medida" class="service-btn">
+            Solicitar presupuesto →
+          </a>
+        </div>
+
+        <!-- Gig 2 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 9l3 3-3 3M13 15h3"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          </div>
+          <div class="service-title">APIs REST e Integraciones</div>
+          <div class="service-tagline">Conectá todo, automatizá cualquier cosa</div>
+          <div class="service-desc">Diseño y construyo APIs escalables que conectan tus apps, pasarelas de pago, herramientas externas y servicios internos sin fricciones.</div>
+          <ul class="service-includes">
+            <li>Diseño de API RESTful y documentación</li>
+            <li>Integraciones con servicios externos</li>
+            <li>Autenticación (JWT / OAuth)</li>
+            <li>Rendimiento y seguridad</li>
+          </ul>
+          <a href="mailto:blascoantonella02@gmail.com?subject=Desarrollo de API" class="service-btn">
+            Solicitar presupuesto →
+          </a>
+        </div>
+
+        <!-- Gig 3 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="service-title">Proceso Automation</div>
+          <div class="service-tagline">Dejá de hacer manualmente lo que el código puede hacer</div>
+          <div class="service-desc">Identifico las tareas repetitivas de tu operación y construyo sistemas automatizados — emails, reportes, notificaciones, sincronización de datos — que le ahorran horas semanales a tu equipo.</div>
+          <ul class="service-includes">
+            <li>Emails y alertas automáticas</li>
+            <li>Tareas programadas y crons</li>
+            <li>Generación de reportes</li>
+            <li>Pipelines de procesamiento de datos</li>
+          </ul>
+          <a href="mailto:blascoantonella02@gmail.com?subject=Proceso Automation" class="service-btn">
+            Solicitar presupuesto →
+          </a>
+        </div>
+
+        <!-- Gig 4 -->
+        <div class="service-card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div class="service-title">Mantenimiento y Soporte</div>
+          <div class="service-tagline">Tu sistema en buenas manos</div>
+          <div class="service-desc">Mantengo aplicaciones web existentes, corrijo errores, mejoro el rendimiento y gestiono los despliegues para que tu equipo pueda enfocarse en el negocio, no en la tecnología.</div>
+          <ul class="service-includes">
+            <li>Corrección de bugs y debugging</li>
+            <li>Optimización de rendimiento</li>
+            <li>Deploy en servidor y Docker</li>
+            <li>Refactorización de código</li>
+          </ul>
+          <a href="mailto:blascoantonella02@gmail.com?subject=Mantenimiento y Soporte" class="service-btn">
+            Solicitar presupuesto →
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       WHY ME
+  ═══════════════════════════════════════ -->
+  <section id="why">
+    <div class="wrap">
+      <div class="why-grid">
+
+        <!-- Left -->
+        <div>
+          <div class="section-eyebrow">Por qué trabajar conmigo</div>
+          <h2 class="section-title">Una desarrolladora que<br>piensa como tu<br>socia de negocio</h2>
+          <p class="section-sub" style="margin-bottom: 40px;">No solo escribo código — entiendo tus objetivos y construyo la solución correcta para el problema correcto.</p>
+
+          <div class="why-list">
+            <div class="why-item">
+              <div class="why-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <div>
+                <div class="why-item-title">Comunicación clara, siempre</div>
+                <div class="why-item-desc">Siempre vas a saber qué está pasando. Doy actualizaciones seguidas, explico las decisiones en lenguaje simple y respondo rápido.</div>
+              </div>
+            </div>
+            <div class="why-item">
+              <div class="why-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <div class="why-item-title">Entregas rápidas y confiables</div>
+                <div class="why-item-desc">Respeto los plazos. Tiempos realistas, sin excusas y un producto entregado que realmente funciona en producción.</div>
+              </div>
+            </div>
+            <div class="why-item">
+              <div class="why-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+              <div>
+                <div class="why-item-title">Adaptado a tu negocio</div>
+                <div class="why-item-desc">Cada proyecto comienza entendiendo tus necesidades reales — no una plantilla genérica. Obtenés exactamente lo que necesitás, nada más.</div>
+              </div>
+            </div>
+            <div class="why-item">
+              <div class="why-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div>
+                <div class="why-item-title">Experiencia de punta a punta</div>
+                <div class="why-item-desc">Desde el relevamiento de requisitos hasta el despliegue en vivo — me encargo del ciclo completo para que no tengas que coordinar múltiples freelancers.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: tech stack -->
+        <div class="why-visual">
+          <div class="why-visual-title">Stack tecnológico</div>
+          <div class="tech-grid">
+            <div class="tech-pill">PHP</div>
+            <div class="tech-pill">Laravel</div>
+            <div class="tech-pill">Node.js</div>
+            <div class="tech-pill">JavaScript</div>
+            <div class="tech-pill">HTML/CSS</div>
+            <div class="tech-pill">Bootstrap</div>
+            <div class="tech-pill">Tailwind</div>
+            <div class="tech-pill">MySQL</div>
+            <div class="tech-pill">SQL Server</div>
+            <div class="tech-pill">Docker</div>
+            <div class="tech-pill">Git</div>
+            <div class="tech-pill">REST APIs</div>
+          </div>
+          <div style="margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border);">
+            <div class="why-visual-title" style="margin-bottom: 20px;">Metodología</div>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                <span style="color: var(--muted);">Análisis primero</span>
+                <div style="width: 100px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; margin-left: 16px;">
+                  <div style="width: 95%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                <span style="color: var(--muted);">Código limpio</span>
+                <div style="width: 100px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; margin-left: 16px;">
+                  <div style="width: 90%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                <span style="color: var(--muted);">Entrega puntual</span>
+                <div style="width: 100px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; margin-left: 16px;">
+                  <div style="width: 98%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       CASE STUDY
+  ═══════════════════════════════════════ -->
+  <section id="case">
+    <div class="wrap">
+      <div class="section-header">
+        <div class="section-eyebrow">Proyecto destacado</div>
+        <h2 class="section-title">Trabajo real, resultados reales</h2>
+        <p class="section-sub">Un vistazo a lo que realmente construí — del concepto a producción.</p>
+      </div>
+
+      <div class="case-card">
+        <div class="case-content">
+          <div class="case-label">Caso de estudio</div>
+          <h3 class="case-title">Sistema de Gestión de Eventos con QR y Automatización</h3>
+          <p class="case-desc">Una empresa necesitaba gestionar cientos de asistentes a eventos, enviar emails de confirmación automáticamente y darle a los organizadores un dashboard en tiempo real — todo sin trabajo manual.</p>
+
+          <div class="case-features">
+            <div class="case-feature">
+              <div class="case-feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </div>
+              <span>Generación de códigos QR y validación de check-in en tiempo real</span>
+            </div>
+            <div class="case-feature">
+              <div class="case-feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <span>Emails automáticos de confirmación y recordatorio</span>
+            </div>
+            <div class="case-feature">
+              <div class="case-feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+              </div>
+              <span>Dashboard de administración en tiempo real con estadísticas de asistencia</span>
+            </div>
+            <div class="case-feature">
+              <div class="case-feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </div>
+              <span>Arquitectura MVC — limpia, escalable y mantenible</span>
+            </div>
+          </div>
+
+          <a href="mailto:blascoantonella02@gmail.com?subject=Quiero algo similar" class="btn-primary" style="font-size: 14px; padding: 12px 22px;">
+            Construir algo similar
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+          </a>
+        </div>
+
+        <div class="case-visual">
+          <div class="mini-dash">
+            <div class="mini-dash-top">
+              <span class="mini-dot" style="background:#ff5f57"></span>
+              <span class="mini-dot" style="background:#ffbd2e"></span>
+              <span class="mini-dot" style="background:#28c840"></span>
+              <span class="mini-dash-title">Panel de eventos</span>
+            </div>
+            <div class="mini-stat-row">
+              <div class="mini-stat">
+                <div class="mini-stat-n">347</div>
+                <div class="mini-stat-l">Registrados</div>
+              </div>
+              <div class="mini-stat">
+                <div class="mini-stat-n">289</div>
+                <div class="mini-stat-l">Con check-in</div>
+              </div>
+              <div class="mini-stat">
+                <div class="mini-stat-n">83%</div>
+                <div class="mini-stat-l">Asistencia</div>
+              </div>
+            </div>
+            <div class="mini-bar-row">
+              <div>
+                <div class="mini-bar-label"><span>Emails enviados</span><span>347/347</span></div>
+                <div class="mini-bar-track"><div class="mini-bar-fill" style="width: 100%"></div></div>
+              </div>
+              <div>
+                <div class="mini-bar-label"><span>QR escaneados</span><span>289/347</span></div>
+                <div class="mini-bar-track"><div class="mini-bar-fill" style="width: 83%"></div></div>
+              </div>
+              <div>
+                <div class="mini-bar-label"><span>Acceso VIP</span><span>42/50</span></div>
+                <div class="mini-bar-track"><div class="mini-bar-fill" style="width: 84%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TESTIMONIALS
+  ═══════════════════════════════════════ -->
+  <section id="testimonials">
+    <div class="wrap">
+      <div class="section-header">
+        <div class="section-eyebrow">Opiniones de clientes</div>
+        <h2 class="section-title">Lo que dicen mis clientes</h2>
+      </div>
+
+      <div class="testi-grid">
+        <div class="testi-card">
+          <div class="testi-quote">"</div>
+          <p class="testi-text">Antonella entregó exactamente lo que necesitábamos — un sistema de gestión interno que reemplazó por completo nuestras planillas. El proyecto se entregó en tiempo, bien documentado y siempre estuvo disponible para responder dudas. Un trabajo realmente impresionante.</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background: linear-gradient(135deg,#00bcd4,#00e5a0)">MR</div>
+            <div>
+              <div class="testi-name">Marcelo Rodríguez</div>
+              <div class="testi-role">CEO, Distribuidora Norte</div>
+              <div class="testi-stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card">
+          <div class="testi-quote">"</div>
+          <p class="testi-text">Contratamos a Antonella para construir una API que integra nuestro punto de venta con el sitio web. Entendió los requisitos rápidamente, planteó casos de borde importantes que no habíamos contemplado y el resultado final funcionó perfecto desde el primer día.</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background: linear-gradient(135deg,#7c3aed,#c084fc)">SF</div>
+            <div>
+              <div class="testi-name">Sofía Fernández</div>
+              <div class="testi-role">CTO, Tienda Digital Latinam</div>
+              <div class="testi-stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card">
+          <div class="testi-quote">"</div>
+          <p class="testi-text">Lo que más valoré fue la comunicación. Siempre supe en qué estado estaba el proyecto. El sistema que desarrolló para nuestros eventos ahora funciona en piloto automático — inscripciones, check-ins con QR, emails — todo automatizado. Un ahorro de tiempo enorme.</p>
+          <div class="testi-author">
+            <div class="testi-avatar" style="background: linear-gradient(135deg,#f59e0b,#ef4444)">LC</div>
+            <div>
+              <div class="testi-name">Lucas Camargo</div>
+              <div class="testi-role">Coordinador de Eventos, Cultura &amp; Co.</div>
+              <div class="testi-stars">★★★★★</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       PROCESS
+  ═══════════════════════════════════════ -->
+  <section id="process">
+    <div class="wrap">
+      <div class="section-header" style="text-align: center; max-width: 600px; margin: 0 auto 56px;">
+        <div class="section-eyebrow">Cómo funciona</div>
+        <h2 class="section-title">Simple. Transparente. Efectivo.</h2>
+        <p class="section-sub" style="margin: 0 auto;">Tres pasos concretos para llevar tu idea de la conversación al producto en vivo.</p>
+      </div>
+
+      <div class="process-steps">
+
+        <div class="process-step">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Entender</div>
+            <div class="step-desc">Hablamos sobre tu idea, tu negocio y tus limitaciones. Hago las preguntas correctas para que no se construya nada que no necesitás realmente.</div>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Desarrollar</div>
+            <div class="step-desc">Desarrollo de forma iterativa con actualizaciones en cada hito. Podés revisar y dar feedback antes de que empiece la siguiente fase. Sin sorpresas.</div>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">Entregar</div>
+            <div class="step-desc">Entrega completa con documentación, despliegue y ventana de soporte. Te quedás con un producto en vivo y el conocimiento para gestionarlo.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       CTA FINAL
+  ═══════════════════════════════════════ -->
+  <section id="cta-final">
+    <div class="wrap">
+      <div class="cta-box">
+        <div class="section-eyebrow" style="text-align: center;">Trabajemos juntos</div>
+        <h2 class="section-title" style="text-align: center;">
+          ¿Tenés un proyecto en mente?<br>Hagámoslo realidad.
+        </h2>
+        <p class="section-sub" style="text-align: center; margin: 0 auto 40px;">
+          Ya sea que tengas un brief completo o solo una idea en borrador — escribime y encontramos juntos el mejor camino. La primera consulta es gratis.
+        </p>
+        <div class="cta-actions">
+          <a href="mailto:blascoantonella02@gmail.com?subject=Trabajemos juntos" class="btn-primary" style="font-size: 16px; padding: 16px 32px;">
+            Contacto me now
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M8 3l5 5-5 5"/></svg>
+          </a>
+          <a href="mailto:blascoantonella02@gmail.com?subject=Solicitud de presupuesto" class="btn-outline" style="font-size: 15px; padding: 15px 28px;">Solicitar presupuesto gratis</a>
+        </div>
+        <p class="cta-email">O escribime directamente a <a href="mailto:blascoantonella02@gmail.com">blascoantonella02@gmail.com</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-inner">
+        <div class="footer-logo">Antonella Blasco<span>.</span></div>
+        <ul class="footer-links">
+          <li><a href="#services">Servicios</a></li>
+          <li><a href="#case">Proyectos</a></li>
+          <li><a href="#process">Proceso</a></li>
+          <li><a href="mailto:blascoantonella02@gmail.com">Contacto</a></li>
+        </ul>
+        <div class="footer-copy">© 2025 · Desarrolladora Full Stack · Argentina</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════
+       JS — mobile menu + scroll reveal
+  ═══════════════════════════════════════ -->
+  <script>
+    // Toggle menú mobile
+    const burger = document.getElementById('burger');
+    const menu   = document.getElementById('nav-menu');
+    burger.addEventListener('click', () => {
+      menu.classList.toggle('open');
+    });
+    // Cerrar al hacer click en link
+    menu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => menu.classList.remove('open'));
+    });
+
+    // Animación de entrada al hacer scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll(
+      '.service-card, .why-item, .testi-card, .process-step, .case-card, .tech-pill'
+    ).forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(24px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+
+    // Escalonar tarjetas en grillas
+    document.querySelectorAll('.services-grid, .testi-grid').forEach(grid => {
+      [...grid.children].forEach((child, i) => {
+        child.style.transitionDelay = `${i * 0.1}s`;
+      });
+    });
+  </script>
+
 </body>
 </html>
